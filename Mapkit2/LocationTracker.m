@@ -42,27 +42,37 @@
 }
 
 -(void)applicationEnterBackground{
+    
     CLLocationManager *locationManager = [LocationTracker sharedLocationManager];
+    
     locationManager.delegate = self;
+    
     locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+    
     locationManager.distanceFilter = kCLDistanceFilterNone;
     
     if(IS_OS_8_OR_LATER) {
+        
         [locationManager requestAlwaysAuthorization];
     }
+    
     [locationManager startUpdatingLocation];
     
     //Use the BackgroundTaskManager to manage all the background Task
     self.shareModel.bgTask = [BackgroundTaskManager sharedBackgroundTaskManager];
+    
     [self.shareModel.bgTask beginNewBackgroundTask];
+    
 }
 
-- (void) restartLocationUpdates
+- (void)restartLocationUpdates
 {
     NSLog(@"restartLocationUpdates");
     
     if (self.shareModel.timer) {
+        
         [self.shareModel.timer invalidate];
+        
         self.shareModel.timer = nil;
     }
     
@@ -125,8 +135,11 @@
     NSLog(@"locationManager didUpdateLocations");
     
     for(int i=0;i<locations.count;i++){
+        
         CLLocation * newLocation = [locations objectAtIndex:i];
+        
         CLLocationCoordinate2D theLocation = newLocation.coordinate;
+        
         CLLocationAccuracy theAccuracy = newLocation.horizontalAccuracy;
         
         NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
@@ -145,13 +158,18 @@
             self.myLastLocationAccuracy= theAccuracy;
             
             NSMutableDictionary * dict = [[NSMutableDictionary alloc]init];
+            
             [dict setObject:[NSNumber numberWithFloat:theLocation.latitude] forKey:@"latitude"];
+            
             [dict setObject:[NSNumber numberWithFloat:theLocation.longitude] forKey:@"longitude"];
+            
             [dict setObject:[NSNumber numberWithFloat:theAccuracy] forKey:@"theAccuracy"];
             
             //Add the vallid location with good accuracy into an array
             //Every 1 minute, I will select the best location based on accuracy and send to server
             [self.shareModel.myLocationArray addObject:dict];
+            
+            
         }
     }
     
@@ -186,7 +204,9 @@
 
 //Stop the locationManager
 -(void)stopLocationDelayBy10Seconds{
+    
     CLLocationManager *locationManager = [LocationTracker sharedLocationManager];
+    
     [locationManager stopUpdatingLocation];
     
     NSLog(@"locationManager stop Updating after 10 seconds");
@@ -228,6 +248,7 @@
     NSMutableDictionary * myBestLocation = [[NSMutableDictionary alloc]init];
     
     for(int i=0;i<self.shareModel.myLocationArray.count;i++){
+        
         NSMutableDictionary * currentLocation = [self.shareModel.myLocationArray objectAtIndex:i];
         
         if(i==0)
@@ -247,13 +268,17 @@
         NSLog(@"Unable to get location, use the last known location");
 
         self.myLocation=self.myLastLocation;
+        
         self.myLocationAccuracy=self.myLastLocationAccuracy;
         
     }else{
         CLLocationCoordinate2D theBestLocation;
         theBestLocation.latitude =[[myBestLocation objectForKey:LATITUDE]floatValue];
+        
         theBestLocation.longitude =[[myBestLocation objectForKey:LONGITUDE]floatValue];
+        
         self.myLocation=theBestLocation;
+        
         self.myLocationAccuracy =[[myBestLocation objectForKey:ACCURACY]floatValue];
     }
     
@@ -266,8 +291,5 @@
     self.shareModel.myLocationArray = nil;
     self.shareModel.myLocationArray = [[NSMutableArray alloc]init];
 }
-
-
-
 
 @end

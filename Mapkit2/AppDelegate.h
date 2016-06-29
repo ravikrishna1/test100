@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import "LocationTracker.h"
+#import "Run.h"
+#import "Run+CoreDataProperties.h"
+#import "Location.h"
+#import "Location+CoreDataProperties.h"
+#import "MathController.h"
+
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -16,6 +23,13 @@
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
+@property LocationTracker * locationTracker;
+@property (nonatomic) NSTimer* locationUpdateTimer;
+
+@property(nonatomic) UIBackgroundTaskIdentifier bgTask;
+
+
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

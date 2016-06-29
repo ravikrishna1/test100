@@ -10,4 +10,6 @@
 
 @interface MulticolorPolylineSegment : MKPolyline
 
+@property (strong, nonatomic) UIColor *color;
+
 @end

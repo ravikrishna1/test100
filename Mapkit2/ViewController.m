@@ -7,8 +7,18 @@
 //
 
 #import "ViewController.h"
+#import "NewRunViewController.h"
+#import "Run.h"
+#import <CoreLocation/CoreLocation.h>
+#import "MathController.h"
+#import "Location.h"
+#import "AppDelegate.h"
 
 @interface ViewController ()
+
+@property int seconds;
+
+@property float distance;
 
 @end
 
@@ -16,12 +26,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    UIViewController *nextController = [segue destinationViewController];
+    
+    if ([nextController isKindOfClass:[NewRunViewController class]]) {
+        
+        ((NewRunViewController *) nextController).managedObjectContext = self.managedObjectContext;
+        
+    }
 }
 
 @end
